@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "description": "Preloads lua scripts with fastify-redis and lured",
   "main": "index.js",
-  "private": true,
   "scripts": {
     "lint": "standard --fix",
     "test": "standard && tap test.js --cov --no-browser",

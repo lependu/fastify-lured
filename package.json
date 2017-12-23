@@ -1,0 +1,41 @@
+{
+  "name": "fastify-lured",
+  "version": "0.1.0",
+  "description": "Preloads lua scripts with fastify-redis and lured",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "lint": "standard --fix",
+    "test": "standard && tap test.js --cov --no-browser",
+    "coverage": "tap test.js --cov --coverage-report html --no-browser"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lependu/fastify-lured.git"
+  },
+  "keywords": [
+    "fastify",
+    "fastify-redis",
+    "nodejs",
+    "lured",
+    "redis",
+    "lua"
+  ],
+  "author": "lependu@protonmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lependu/fastify-lured/issues"
+  },
+  "homepage": "https://github.com/lependu/fastify-lured#readme",
+  "devDependencies": {
+    "fastify": "^0.37.0",
+    "fastify-redis": "^0.3.0",
+    "standard": "^10.0.3",
+    "tap": "^11.0.1"
+  },
+  "dependencies": {
+    "camelcase": "^4.1.0",
+    "fastify-plugin": "^0.2.1",
+    "lured": "^1.0.1"
+  }
+}

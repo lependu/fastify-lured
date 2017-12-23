@@ -1,0 +1,19 @@
+language: node_js
+
+node_js:
+  - "8"
+  - "6"
+
+script: standard && tap test.js
+
+services:
+  - redis-server
+
+addons:
+  hosts:
+    - redis-test
+
+notifications:
+  email:
+    on_success: never
+    on_failure: always

@@ -45,9 +45,11 @@ const loadScripts = (path) => {
   let scriptList = {}
   let files = readdirSync(path)
   files.map(item => {
-    let name = camelCase(item.replace('.lua', ''))
-    scriptList[name] = {
-      script: readFileSync(join(path, item), 'utf-8')
+    if (item.endsWith('.lua')) {
+      let name = camelCase(item.replace('.lua', ''))
+      scriptList[name] = {
+        script: readFileSync(join(path, item), 'utf-8')
+      }
     }
   })
   return scriptList

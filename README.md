@@ -5,7 +5,7 @@
 [![Greenkeeper badge](https://badges.greenkeeper.io/lependu/fastify-lured.svg)](https://greenkeeper.io/)
 [![Known Vulnerabilities](https://snyk.io/test/github/lependu/fastify-lured/badge.svg)](https://snyk.io/test/github/lependu/fastify-lured)
 
-Simple utility plugin to preload lua scripts via [fastify-redis](https://github.com/fastify/fastify-redis). Under the hood it scans the directory provided in `path` option and loads the files with [lured](https://github.cm/enobufs/lured).
+Simple plugin to preload lua scripts via [fastify-redis](https://github.com/fastify/fastify-redis). Under the hood it scans the directory provided in `path` option and loads the files with [lured](https://github.cm/enobufs/lured).
 
 ## Install
 ```
@@ -14,15 +14,15 @@ $ npm i --save fastify-lured
 
 ## Usage
 
-Provide a redis server.
-Register `fastify-redis` first, then this plugin.
+1. Provide a redis server.
+2. Register `fastify-redis` first, then this plugin.
 
-It provides `scripts` decorator object:
+It provides `scripts` [decorator](https://www.fastify.io/docs/latest/Decorators/) object:
 ```
 {
   [lowerCamelCaseFileNameWithoutExt]: {
-    script: {String}
-    sha: {String}
+    script: {String} The string representation of the script.
+    sha: {String} Calculated sha of the script.
   }
 }
 ```
@@ -43,10 +43,10 @@ instance
 
     redis.evalsha(scripts.hello.sha, 0, req.params.name, (err, result) => {
       if (err) throw err
-      // hello.lua returns json so we do not need parsing.
       reply
-          // We need to set the content-type header.
+          // Sets the content-type header.
           .type('application/json; charset=utf-8')
+          // hello.lua returns json so we do not need parsing.
           .send(result)
     })
   })
@@ -59,8 +59,7 @@ instance
 ## Caveats
 
 - No recursive file loading.
-- Only `.lua` extension or file name without extension supported.
-- It tries to load every file in the provided directory.
+- Only loads files with `.lua` extension.
 
 ## License
 

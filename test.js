@@ -9,6 +9,23 @@ const { join } = require('path')
 const redisOptions = { host: 'redis-test' }
 const pluginOptions = { path: join(__dirname, 'test-scripts') }
 
+t.afterEach(done => {
+  let instance = Fastify()
+  instance
+    .register(redis, redisOptions)
+    .ready(err => {
+      t.error(err)
+      instance.redis.multi()
+        .flushdb()
+        .script('flush')
+        .exec(err => {
+          t.error(err)
+          instance.close()
+          done()
+        })
+    })
+})
+
 t.test('@scripts decorator', t => {
   t.plan(2)
   let instance = Fastify()

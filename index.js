@@ -5,8 +5,6 @@ const camelCase = require('camelcase')
 const lured = require('lured')
 
 const fastifyLured = (instance, opts, next) => {
-  if (!instance.redis) return next(new Error('Redis client missing'))
-
   let error = checkDirForErrors(opts.path)
   if (error) return next(error)
 
@@ -55,4 +53,10 @@ const loadScripts = (path) => {
   return scriptList
 }
 
-module.exports = fp(fastifyLured)
+module.exports = fp(fastifyLured, {
+  fastify: '>=0.37.0',
+  name: 'fastify-lured',
+  decorators: {
+    fastify: ['redis']
+  }
+})

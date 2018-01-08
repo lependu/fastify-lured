@@ -80,16 +80,7 @@ t.test('script ping-pong (without extension)', t => {
 })
 
 t.test('errors', t => {
-  t.plan(5)
-
-  t.test('redis client not registered', t => {
-    t.plan(1)
-    let instance = Fastify()
-    instance.register(subject, pluginOptions, err => {
-      t.equal(err.message, 'Redis client missing')
-    })
-    instance.close()
-  })
+  t.plan(4)
 
   t.test('no path provided', t => {
     t.plan(1)

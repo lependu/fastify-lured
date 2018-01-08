@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/lependu/fastify-lured#readme",
   "devDependencies": {
-    "fastify": "^0.37.0",
+    "fastify": "^0.38.0",
     "fastify-redis": "^0.3.0",
     "standard": "^10.0.3",
     "tap": "^11.0.1"

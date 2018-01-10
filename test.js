@@ -128,7 +128,7 @@ t.test('errors', t => {
 })
 
 t.test('Example', t => {
-  t.plan(3)
+  t.plan(4)
 
   let build = require('./example')
   let instance = build()
@@ -136,8 +136,9 @@ t.test('Example', t => {
   instance.inject({
     method: 'GET',
     url: '/hello/world'
-  }, res => {
+  }, (err, res) => {
     let { statusCode, payload, headers } = res
+    t.error(err)
     t.equal(statusCode, 200)
     t.equal(headers['content-type'], 'application/json; charset=utf-8')
     t.equal(payload, JSON.stringify({ hello: 'world' }))

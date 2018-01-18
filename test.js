@@ -13,8 +13,7 @@ t.afterEach(done => {
   let instance = Fastify()
   instance
     .register(redis, redisOptions)
-    .ready(err => {
-      t.error(err)
+    .ready(() => {
       instance.redis.multi()
         .flushdb()
         .script('flush')
@@ -62,7 +61,7 @@ t.test('script hello.lua (with .lua extension)', t => {
     })
 })
 
-t.test('script ping-pong (without extension)', t => {
+t.test('script ping-pong', t => {
   t.plan(2)
   let instance = Fastify()
   instance
@@ -87,10 +86,11 @@ t.test('errors', t => {
     let instance = Fastify()
     instance
       .register(redis, redisOptions)
-      .register(subject, {}, err => {
-        t.equal(err.message, '"path" option is required')
-      })
-    instance.close()
+      .register(subject, {})
+    instance.listen(0, err => {
+      instance.close()
+      t.equal(err.message, '"path" option is required')
+    })
   })
 
   t.test('path is not a string', t => {
@@ -98,10 +98,11 @@ t.test('errors', t => {
     let instance = Fastify()
     instance
       .register(redis, redisOptions)
-      .register(subject, { path: 42 }, err => {
-        t.equal(err.message, '"path" option must be a string')
-      })
-    instance.close()
+      .register(subject, { path: 42 })
+    instance.listen(0, err => {
+      instance.close()
+      t.equal(err.message, '"path" option must be a string')
+    })
   })
 
   t.test('path is not absolute path', t => {
@@ -109,10 +110,11 @@ t.test('errors', t => {
     let instance = Fastify()
     instance
       .register(redis, redisOptions)
-      .register(subject, { path: './not-absolute' }, err => {
-        t.equal(err.message, '"path" option must be an absolute path')
-      })
-    instance.close()
+      .register(subject, { path: './not-absolute' })
+    instance.listen(0, err => {
+      instance.close()
+      t.equal(err.message, '"path" option must be an absolute path')
+    })
   })
 
   t.test('path not exists', t => {
@@ -120,10 +122,11 @@ t.test('errors', t => {
     let instance = Fastify()
     instance
       .register(redis, redisOptions)
-      .register(subject, { path: join(__dirname, 'not-exists') }, err => {
-        t.ok(~err.message.indexOf('no such file or directory'))
-      })
-    instance.close()
+      .register(subject, { path: join(__dirname, 'not-exists') })
+    instance.listen(0, err => {
+      instance.close()
+      t.ok(~err.message.indexOf('no such file or directory'))
+    })
   })
 })
 

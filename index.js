@@ -54,9 +54,10 @@ const loadScripts = (path) => {
 }
 
 module.exports = fp(fastifyLured, {
-  fastify: '>=0.38.0',
+  fastify: '>=0.39.1',
   name: 'fastify-lured',
   decorators: {
     fastify: ['redis']
-  }
+  },
+  dependencies: ['fastify-redis']
 })

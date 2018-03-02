@@ -16,9 +16,9 @@ const build = (options) => {
 
         // hello.lua script returns json so we do not need additional parsing
         reply
-            // We need to set the correct content-type header
-            .type('application/json; charset=utf-8')
-            .send(result)
+        // We need to set the correct content-type header
+          .type('application/json; charset=utf-8')
+          .send(result)
       })
     })
   return instance

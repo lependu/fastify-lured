@@ -3,33 +3,37 @@
 const t = require('tap')
 const Fastify = require('fastify')
 const subject = require('./index')
-const redis = require('fastify-redis')
+const fastifyRedis = require('fastify-redis')
+const nodeRedis = require('redis')
 const { join } = require('path')
 
+const { createClient } = nodeRedis
 const redisOptions = { host: 'redis-test' }
 const pluginOptions = { path: join(__dirname, 'test-scripts') }
 
-t.afterEach(done => {
-  let instance = Fastify()
-  instance
-    .register(redis, redisOptions)
-    .ready(() => {
-      instance.redis.multi()
-        .flushdb()
-        .script('flush')
-        .exec(err => {
-          t.error(err)
-          instance.close()
-          done()
-        })
+t.beforeEach(done => {
+  let fastify = Fastify()
+  let client = createClient(redisOptions)
+
+  fastify.register(fastifyRedis, { client })
+
+  fastify.ready(err => {
+    t.error(err)
+
+    fastify.redis.flushall(() => {
+      fastify.close()
+      done()
     })
+  })
 })
 
 t.test('@scripts decorator', t => {
   t.plan(2)
   let instance = Fastify()
+  let client = createClient(redisOptions)
+
   instance
-    .register(redis, redisOptions)
+    .register(fastifyRedis, { client })
     .register(subject, pluginOptions)
     .ready(() => {
       t.equal(
@@ -47,8 +51,10 @@ t.test('@scripts decorator', t => {
 t.test('script hello.lua (with .lua extension)', t => {
   t.plan(2)
   let instance = Fastify()
+  let client = createClient(redisOptions)
+
   instance
-    .register(redis, redisOptions)
+    .register(fastifyRedis, { client })
     .register(subject, pluginOptions)
     .ready(() => {
       let { redis, scripts } = instance
@@ -64,8 +70,10 @@ t.test('script hello.lua (with .lua extension)', t => {
 t.test('script ping-pong', t => {
   t.plan(2)
   let instance = Fastify()
+  let client = createClient(redisOptions)
+
   instance
-    .register(redis, redisOptions)
+    .register(fastifyRedis, { client })
     .register(subject, pluginOptions)
     .ready(() => {
       let { redis, scripts } = instance
@@ -84,8 +92,10 @@ t.test('errors', t => {
   t.test('no path provided', t => {
     t.plan(1)
     let instance = Fastify()
+    let client = createClient(redisOptions)
+
     instance
-      .register(redis, redisOptions)
+      .register(fastifyRedis, { client })
       .register(subject, {})
     instance.listen(0, err => {
       instance.close()
@@ -96,8 +106,10 @@ t.test('errors', t => {
   t.test('path is not a string', t => {
     t.plan(1)
     let instance = Fastify()
+    let client = createClient(redisOptions)
+
     instance
-      .register(redis, redisOptions)
+      .register(fastifyRedis, { client })
       .register(subject, { path: 42 })
     instance.listen(0, err => {
       instance.close()
@@ -108,8 +120,10 @@ t.test('errors', t => {
   t.test('path is not absolute path', t => {
     t.plan(1)
     let instance = Fastify()
+    let client = createClient(redisOptions)
+
     instance
-      .register(redis, redisOptions)
+      .register(fastifyRedis, { client })
       .register(subject, { path: './not-absolute' })
     instance.listen(0, err => {
       instance.close()
@@ -120,8 +134,10 @@ t.test('errors', t => {
   t.test('path not exists', t => {
     t.plan(1)
     let instance = Fastify()
+    let client = createClient(redisOptions)
+
     instance
-      .register(redis, redisOptions)
+      .register(fastifyRedis, { client })
       .register(subject, { path: join(__dirname, 'not-exists') })
     instance.listen(0, err => {
       instance.close()

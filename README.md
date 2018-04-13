@@ -14,7 +14,7 @@ $ npm i --save fastify-lured
 
 ## Usage
 
-1. Provide a redis server.
+1. Set up a redis server.
 2. Register `fastify-redis` first, then this plugin.
 
 It provides `scripts` [decorator](https://www.fastify.io/docs/latest/Decorators/) object:
@@ -29,25 +29,27 @@ It provides `scripts` [decorator](https://www.fastify.io/docs/latest/Decorators/
 
 ```js
 const Fastify = require('fastify')
-const redis = require('fastify-redis')
-const lured = require('./fastify-lured')
+const fastifyRedis = require('fastify-redis')
+const plugin = require('./index')
+const nodeRedis = require('redis')
 const { join } = require('path')
 
+const { createClient } = nodeRedis
 const instance = Fastify()
+const client = createClient({ host: 'redis-test' })
 
 instance
-  .register(redis, { host: 'redis-test' })
+  .register(fastifyRedis, { client })
   .register(lured, { path: join(__dirname, 'test-scripts') })
   .get('/hello/:name', {}, (req, reply) => {
     let { redis, scripts } = instance
 
     redis.evalsha(scripts.hello.sha, 0, req.params.name, (err, result) => {
-      if (err) throw err
       reply
-          // Sets the content-type header.
-          .type('application/json; charset=utf-8')
-          // hello.lua returns json so we do not need parsing.
-          .send(result)
+        // Sets the content-type header.
+        .type('application/json; charset=utf-8')
+        // hello.lua returns json so we do not need parsing.
+        .send(err || result)
     })
   })
 ```
@@ -60,6 +62,7 @@ instance
 
 - No recursive file loading.
 - Only loads files with `.lua` extension.
+- From *`v2.0.0`* you need to pass node-redis client to fastify-redis, because it switched to ioredis as default client. Ioredis `Commander` class provides much better support for lua scripts, so using this plugin makes no sense.
 
 ## License
 

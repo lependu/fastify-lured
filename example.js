@@ -1,24 +1,27 @@
 const Fastify = require('fastify')
-const redis = require('fastify-redis')
+const fastifyRedis = require('fastify-redis')
 const plugin = require('./index')
+const nodeRedis = require('redis')
 const { join } = require('path')
 
+const { createClient } = nodeRedis
+
 const build = (options) => {
-  const instance = Fastify()
+  let instance = Fastify()
+  let client = createClient({ host: 'redis-test' })
+
   instance
-    .register(redis, { host: 'redis-test' })
+    .register(fastifyRedis, { client })
     .register(plugin, { path: join(__dirname, 'test-scripts') })
     .get('/hello/:name', {}, (req, reply) => {
       let { redis, scripts } = instance
 
       redis.evalsha(scripts.hello.sha, 0, req.params.name, (err, result) => {
-        if (err) throw err
-
         // hello.lua script returns json so we do not need additional parsing
         reply
         // We need to set the correct content-type header
           .type('application/json; charset=utf-8')
-          .send(result)
+          .send(err || result)
       })
     })
   return instance

@@ -48,8 +48,7 @@ instance
       reply
         // Sets the content-type header.
         .type('application/json; charset=utf-8')
-        // hello.lua returns json so we do not need parsing.
-        .send(err || result)
+        .send(err || JSON.parse(result))
     })
   })
 ```

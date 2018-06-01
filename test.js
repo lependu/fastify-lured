@@ -160,7 +160,7 @@ t.test('Example', t => {
     t.error(err)
     t.equal(statusCode, 200)
     t.equal(headers['content-type'], 'application/json; charset=utf-8')
-    t.equal(payload, JSON.stringify({ hello: 'world' }))
+    t.deepEqual(JSON.parse(payload), { hello: 'world' })
   })
   instance.close()
 })

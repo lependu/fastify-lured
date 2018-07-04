@@ -49,9 +49,15 @@ instance
 
     redis.evalsha(scripts.hello.sha, 0, req.params.name, (err, result) => {
       reply
-        // Sets the content-type header.
+        // hello.lua script returns JSON which do not need seraialization.
+        // Therefore we can bypass fastify internal serialization process.
+        // For that we must set the content-type header.
+        // See: https://www.fastify.io/docs/latest/Reply/#-serializer-func-
         .type('application/json; charset=utf-8')
-        .send(err || JSON.parse(result))
+        .serializer(function () {
+          return result
+        })
+        .send(err || result)
     })
   })
 ```

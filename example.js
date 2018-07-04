@@ -9,28 +9,23 @@ const { createClient } = nodeRedis
 const build = (options) => {
   let instance = Fastify()
   let client = createClient({ host: 'redis-test' })
-  const opts = {
-    schema: {
-      response: {
-        200: {
-          type: 'object',
-          properties: {
-            hello: { type: 'string' }
-          }
-        }
-      }
-    }
-  }
   instance
     .register(fastifyRedis, { client })
     .register(plugin, { path: join(__dirname, 'test-scripts') })
-    .get('/hello/:name', opts, (req, reply) => {
+    .get('/hello/:name', {}, (req, reply) => {
       let { redis, scripts } = instance
 
       redis.evalsha(scripts.hello.sha, 0, req.params.name, (err, result) => {
         reply
+          // hello.lua script returns JSON which do not need seraialization.
+          // Therefore we can bypass fastify internal serialization process.
+          // For that we must set the content-type header.
+          // See: https://www.fastify.io/docs/latest/Reply/#-serializer-func-
           .type('application/json; charset=utf-8')
-          .send(err || JSON.parse(result))
+          .serializer(function () {
+            return result
+          })
+          .send(err || result)
       })
     })
   return instance

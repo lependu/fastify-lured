@@ -39,6 +39,6 @@
   "dependencies": {
     "camelcase": "^5.0.0",
     "fastify-plugin": "^1.2.0",
-    "lured": "^1.0.1"
+    "lured": "^1.0.2"
   }
 }

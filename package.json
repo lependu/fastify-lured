@@ -1,6 +1,6 @@
 {
   "name": "fastify-lured",
-  "version": "2.4.1",
+  "version": "2.5.0",
   "description": "Preloads lua scripts with fastify-redis and lured",
   "main": "index.js",
   "engines": {

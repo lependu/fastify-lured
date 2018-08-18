@@ -8,7 +8,7 @@
 ![npm](https://img.shields.io/npm/v/fastify-lured.svg)
 ![npm](https://img.shields.io/npm/dm/fastify-lured.svg)
 
-Simple plugin to preload lua scripts via [fastify-redis](https://github.com/fastify/fastify-redis). Under the hood it scans the directory provided in `path` option and loads the files with [lured](https://github.cm/enobufs/lured).
+Simple plugin to preload lua scripts via [fastify-redis](https://github.com/fastify/fastify-redis). Under the hood it scans the directory provided in `path` option and loads the files with [lured](https://github.com/enobufs/lured).
 
 ## Install
 ```

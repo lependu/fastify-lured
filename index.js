@@ -5,13 +5,13 @@ const camelCase = require('camelcase')
 const lured = require('lured')
 
 const fastifyLured = (instance, opts, next) => {
-  let error = checkDirForErrors(opts.path)
+  const error = checkDirForErrors(opts.path)
   if (error) return next(error)
 
-  let { redis } = instance
-  let scripts = loadScripts(opts.path)
+  const { redis } = instance
+  const scripts = loadScripts(opts.path)
 
-  let scriptManager = lured.create(redis, scripts)
+  const scriptManager = lured.create(redis, scripts)
   scriptManager.load(err => {
     if (err) return next(err)
     instance.decorate('scripts', scripts)
@@ -40,11 +40,11 @@ const checkDirForErrors = (path) => {
 }
 
 const loadScripts = (path) => {
-  let scriptList = {}
-  let files = readdirSync(path)
+  const scriptList = {}
+  const files = readdirSync(path)
   files.map(item => {
     if (item.endsWith('.lua')) {
-      let name = camelCase(item.replace('.lua', ''))
+      const name = camelCase(item.replace('.lua', ''))
       scriptList[name] = {
         script: readFileSync(join(path, item), 'utf-8')
       }

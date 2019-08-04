@@ -1,5 +1,7 @@
 ## fastify-lured
 
+> :warning: This package is maintained until 2019-09-01 (end of the `fastify@1.x` lifecycle.) and won't be updated to `fastify@2.x`
+
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](http://standardjs.com/)
 [![Build Status](https://travis-ci.org/lependu/fastify-lured.svg?branch=master)](https://travis-ci.org/lependu/fastify-lured)
 [![Greenkeeper badge](https://badges.greenkeeper.io/lependu/fastify-lured.svg)](https://greenkeeper.io/)

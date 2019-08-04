@@ -7,13 +7,13 @@ const { join } = require('path')
 const { createClient } = nodeRedis
 
 const build = (options) => {
-  let instance = Fastify()
-  let client = createClient({ host: 'redis-test' })
+  const instance = Fastify()
+  const client = createClient({ host: 'redis-test' })
   instance
     .register(fastifyRedis, { client })
     .register(plugin, { path: join(__dirname, 'test-scripts') })
     .get('/hello/:name', {}, (req, reply) => {
-      let { redis, scripts } = instance
+      const { redis, scripts } = instance
 
       redis.evalsha(scripts.hello.sha, 0, req.params.name, (err, result) => {
         reply

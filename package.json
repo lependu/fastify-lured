@@ -37,7 +37,7 @@
     "tap": "^12.7.0"
   },
   "dependencies": {
-    "camelcase": "^5.0.0",
+    "camelcase": "^6.0.0",
     "fastify-plugin": "^1.5.0",
     "lured": "^1.0.3"
   },
